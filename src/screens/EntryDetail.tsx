@@ -40,6 +40,7 @@ export default function EntryDetail() {
     );
   }
 
+  const totalItems = entry.items.reduce((s, i) => s + i.quantityGiven, 0);
   const totalPendingQty = entry.items.reduce((s, i) => s + getPendingQuantity(i.quantityGiven, i.quantityReturned), 0);
   const totalPendingAmount = entry.items.reduce(
     (s, i) => s + getPendingQuantity(i.quantityGiven, i.quantityReturned) * (i.pricePerItem ?? 0),
@@ -134,6 +135,7 @@ export default function EntryDetail() {
       <Card className="p-4 bg-gray-50">
         <h2 className="text-sm font-medium text-gray-700 mb-2">Summary</h2>
         <div className="space-y-1 text-sm">
+          <p className="flex justify-between"><span>Total items</span><span>{totalItems}</span></p>
           <p className="flex justify-between"><span>Total amount</span><span>{formatCurrency(entry.totalAmount)}</span></p>
           <p className="flex justify-between"><span>Pending amount</span><span>{formatCurrency(totalPendingAmount)}</span></p>
           <p className="flex justify-between"><span>Pending items</span><span>{totalPendingQty}</span></p>

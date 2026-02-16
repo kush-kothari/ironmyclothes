@@ -48,6 +48,16 @@ export default function AddEntry() {
 
   const totalAmount = categories.reduce((sum, c) => sum + (selected[c.id] ?? 0) * c.price, 0);
 
+  // Cart rows for summary: only selected categories with qty > 0
+  const cartRows = categories
+    .filter((c) => (selected[c.id] ?? 0) > 0)
+    .map((c) => ({
+      name: c.name,
+      qty: selected[c.id]!,
+      unitPrice: c.price,
+      lineTotal: selected[c.id]! * c.price,
+    }));
+
   const handleGroupPhoto = async () => {
     await requestCameraPermissions();
     const uri = await takeGroupPhoto();
@@ -141,8 +151,46 @@ export default function AddEntry() {
             </div>
           ))}
         </div>
-        <p className="text-sm font-medium text-gray-700 mt-3">Total: {formatCurrency(totalAmount)}</p>
       </Card>
+
+      {/* Cart summary – visible when at least one item selected */}
+      {cartRows.length > 0 && (
+        <Card className="p-4">
+          <h2 className="text-sm font-medium text-gray-700 mb-3">Cart summary</h2>
+          <div className="overflow-x-auto -mx-1">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-2 px-1 font-medium text-gray-600">Category</th>
+                  <th className="text-center py-2 px-1 font-medium text-gray-600 w-14">Qty</th>
+                  <th className="text-right py-2 px-1 font-medium text-gray-600">Unit</th>
+                  <th className="text-right py-2 px-1 font-medium text-gray-600">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cartRows.map((row) => (
+                  <tr key={row.name} className="border-b border-gray-100">
+                    <td className="py-2.5 px-1 text-gray-900">{row.name}</td>
+                    <td className="py-2.5 px-1 text-center text-gray-700">{row.qty}</td>
+                    <td className="py-2.5 px-1 text-right text-gray-600">{formatCurrency(row.unitPrice)}</td>
+                    <td className="py-2.5 px-1 text-right font-medium text-gray-900">{formatCurrency(row.lineTotal)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t border-gray-200 font-medium">
+                  <td className="py-2.5 px-1 text-gray-600">Total</td>
+                  <td className="py-2.5 px-1 text-center font-semibold text-gray-900">
+                    {cartRows.reduce((s, r) => s + r.qty, 0)}
+                  </td>
+                  <td className="py-2.5 px-1 text-right text-gray-600">—</td>
+                  <td className="py-2.5 px-1 text-right font-semibold text-gray-900">{formatCurrency(totalAmount)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </Card>
+      )}
 
       {/* Photos */}
       <Card className="p-4">
