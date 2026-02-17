@@ -96,13 +96,45 @@ If the phone does not appear, install USB drivers for your device (manufacturer�
 
 ## Build and installation
 
-### Debug APK
+### Generate APK and install on your phone
 
-1. `npm run build`
-2. `npx cap sync`
-3. Open `android/` in Android Studio, then **Build → Build Bundle(s) / APK(s) → Build APK(s)**  
-   Or from CLI: `cd android && ./gradlew assembleDebug`
-4. Install the APK from `android/app/build/outputs/apk/debug/`
+**Step 1 – Build the web app and sync to Android**
+
+```bash
+npm run build
+npx cap sync
+```
+
+**Step 2 – Build the APK**
+
+- **In Android Studio:** Open the `android/` folder → **Build → Build Bundle(s) / APK(s) → Build APK(s)**. When it finishes, click **Locate** in the notification to open the folder, or ignore and go to the path below.
+- **From command line:** `cd android` then run `gradlew.bat assembleDebug` (Windows) or `./gradlew assembleDebug` (Mac/Linux).
+
+The debug APK will be at:
+
+`android/app/build/outputs/apk/debug/app-debug.apk`
+
+**Step 3 – Install on your phone**
+
+**Option A – USB (phone connected to PC)**
+
+1. Enable **USB debugging** on the phone (Settings → Developer options).
+2. Connect the phone with a USB cable.
+3. Run: `cd android && adb install app/build/outputs/apk/debug/app-debug.apk`  
+   (Or from project root: `adb install android/app/build/outputs/apk/debug/app-debug.apk`)
+
+**Option B – Copy APK to phone and install**
+
+1. Copy `app-debug.apk` to your phone (USB file transfer, Google Drive, email, etc.).
+2. On the phone, open **Settings → Security** (or **Apps**) and allow **Install from unknown sources** (or **Install unknown apps** for the file manager / browser you use).
+3. Open the APK file on the phone (Files app or Downloads) and tap it → **Install**.
+
+### Debug APK (short version)
+
+1. `npm run build` then `npx cap sync`
+2. Android Studio: **Build → Build Bundle(s) / APK(s) → Build APK(s)**  
+   Or CLI: `cd android && ./gradlew assembleDebug` (Mac/Linux) or `gradlew.bat assembleDebug` (Windows)
+3. APK path: `android/app/build/outputs/apk/debug/app-debug.apk`
 
 ### Release build
 

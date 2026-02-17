@@ -36,6 +36,11 @@
     </application>
 
     <!-- Permissions -->
-
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Camera: for taking photos (Group photo) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Photos: for picking images from gallery (Add photos). Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Photos: for picking on Android 12 and below -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 </manifest>
